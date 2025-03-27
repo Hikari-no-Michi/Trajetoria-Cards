@@ -1,6 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { FaChartBar } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faEye,
+  faBook,
+  faClipboardList,
+  faChartBar,
+} from '@fortawesome/free-solid-svg-icons';
 
 type Disciplina = {
   nome: string;
@@ -42,7 +48,7 @@ const disciplinas: Disciplina[] = [
   { nome: 'Direito Processual Penal', arquivo: 'processual_penal.json' },
 ];
 
-const TrajetoriaCards: React.FC = () => {
+export default function FlashcardApp() {
   const [showDisciplinas, setShowDisciplinas] = useState(false);
   const [mensagem, setMensagem] = useState<string>(''); // Ajustado o tipo para string
   const [selectedDisciplina, setSelectedDisciplina] =
@@ -74,22 +80,33 @@ const TrajetoriaCards: React.FC = () => {
 
   const handleSelectDisciplina = (disciplina: Disciplina) => {
     setSelectedDisciplina(disciplina);
-    setShowDisciplinas(false);
     fetchConteudoDisciplina(disciplina.arquivo);
   };
 
   return (
-    <div className="h-screen flex flex-col bg-[#e0f7fa]">
-      <header className="w-full bg-[#4fc3f7] text-white p-4 flex justify-center items-center space-x-4 shadow-md">
-        <button className="flex items-center bg-[#e0f7fa] text-[#0288d1] px-6 py-3 rounded-full shadow-md border-2 border-[#0288d1] hover:bg-[#b3e5fc] focus:outline-none">
-          <FaChartBar className="mr-2" /> Estatísticas
-        </button>
-        <button
-          className="bg-[#e0f7fa] text-[#0288d1] px-6 py-3 rounded-full shadow-md border-2 border-[#0288d1] hover:bg-[#b3e5fc] focus:outline-none"
-          onClick={() => setShowDisciplinas(true)}
-        >
-          Disciplinas
-        </button>
+    <div className="h-screen w-full bg-sky-100 flex flex-col items-center">
+      {/* Header */}
+      <header className="w-full bg-sky-600 text-white p-4 shadow-md flex flex-col items-center">
+        <h1 className="text-base font-semibold">
+          Lei Seca | Lei de Registros Públicos
+        </h1>
+        <div className="w-full flex justify-between mt-2 max-w-lg">
+          <button className="flex-1 bg-sky-500 p-2 mx-0.5 rounded-md flex flex-col items-center justify-center text-sm">
+            <FontAwesomeIcon icon={faChartBar} className="w-6 h-6 mb-1" />
+            <span>Estatísticas</span>
+          </button>
+          <button
+            onClick={() => setShowDisciplinas(true)}
+            className="flex-1 bg-sky-500 p-2 mx-0.5 rounded-md flex flex-col items-center justify-center text-sm"
+          >
+            <FontAwesomeIcon icon={faBook} className="w-6 h-6 mb-1" />
+            <span>Disciplina</span>
+          </button>
+          <button className="flex-1 bg-sky-500 p-2 mx-0.5 rounded-md flex flex-col items-center justify-center text-sm">
+            <FontAwesomeIcon icon={faClipboardList} className="w-6 h-6 mb-1" />
+            <span>Revisão</span>
+          </button>
+        </div>
       </header>
 
       {showDisciplinas && (
@@ -123,32 +140,41 @@ const TrajetoriaCards: React.FC = () => {
         </div>
       )}
 
-      <div className="flex flex-grow items-center justify-center py-6">
+      {/* Search Bar */}
+      <div className="w-full max-w-lg mt-4 px-2 sm:px-0">
+        <input
+          type="text"
+          placeholder="Pesquisar card"
+          className="w-full p-2 border border-sky-400 rounded-md"
+        />
+      </div>
+
+      {/* Flashcard */}
+      <div className="w-full max-w-lg mt-4 px-2 sm:px-0">
         <div
-          onClick={() => setMostrarPergunta(!mostrarPergunta)} // Corrigido o onClick
-          className="w-[500px] max-w-full mx-4 bg-white shadow-xl rounded-3xl flex flex-col items-center justify-center py-6 px-4 border-4 border-[#0288d1]
-          h-[calc(100%-100px)]"
+          onClick={() => setMostrarPergunta(!mostrarPergunta)}
+          className="bg-white p-2 rounded-lg shadow-md text-center sm:h-[300px] h-[250px]"
         >
           {conteudoDisciplina ? (
             <>
               {mostrarPergunta === false ? (
-                <h2 className="text-2xl font-bold text-[#0288d1] text-center mb-4 transition-opacity duration-500 opacity-100">
+                <h2 className="text-2xl font-bold text-[#0288d1] text-center mb-4 transition-opacity duration-500 opacity-100 flex items-center justify-center h-full">
                   {conteudoDisciplina.pergunta}
                 </h2>
               ) : (
-                <p className="text-lg text-center text-gray-700 transition-opacity duration-500 opacity-100">
+                <p className="text-lg text-center text-gray-700 transition-opacity duration-500 opacity-100 flex items-center justify-center h-full px-4">
                   {conteudoDisciplina.resposta}
                 </p>
               )}
             </>
           ) : (
             <>
-              <h2 className="text-3xl font-bold text-[#0288d1] text-center mb-6">
+              <h2 className="text-2xl font-bold text-[#0288d1] text-center mb-2 py-6 px-2 md:text-3xl md:px-3 lg:text-3xl lg:px-5">
                 {mensagem}
               </h2>
               {!showDisciplinas && (
                 <button
-                  className="bg-[#0288d1] text-white px-8 py-4 rounded-full shadow-lg border-2 border-[#0288d1] hover:bg-[#01579b] focus:outline-none"
+                  className="bg-[#0288d1] text-white px-8 py-3 rounded-full shadow-lg border-2 border-[#0288d1] hover:bg-[#01579b] focus:outline-none"
                   onClick={() => setShowDisciplinas(true)}
                 >
                   Vamos Começar ?
@@ -160,6 +186,4 @@ const TrajetoriaCards: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default TrajetoriaCards;
+}
